@@ -1,0 +1,161 @@
+name: 构建预印本
+
+on: [push, pull_request, workflow_dispatch, workflow_call]
+
+jobs:
+  build-and-prerelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 安装依赖
+        run: sudo apt install -y pdftk
+      - name: 下载字体
+        run: |
+          # Source Han Serif
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-ExtraLight.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-Light.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-Regular.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-Medium.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-SemiBold.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-Bold.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-serif/raw/release/OTF/SimplifiedChinese/SourceHanSerifSC-Heavy.otf
+          # Source Han Sans
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-ExtraLight.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Light.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Regular.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Medium.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Normal.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Bold.otf
+          wget -q -P ./fonts/ https://github.com/adobe-fonts/source-han-sans/raw/release/OTF/SimplifiedChinese/SourceHanSansSC-Heavy.otf
+          # DejaVu fonts
+          wget -q -P ./ https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-ttf-2.37.zip
+          unzip -q -d ./ ./dejavu-fonts-ttf-2.37.zip
+          mv ./dejavu-fonts-ttf-2.37/ttf/* ./fonts/
+          # Computer Modern Unicode
+          wget -q -P ./ https://download.sourceforge.net/project/cm-unicode/cm-unicode/0.7.0/cm-unicode-0.7.0-otf.tar.xz
+          tar xf cm-unicode-0.7.0-otf.tar.xz
+          mv ./cm-unicode-0.7.0/*.otf ./fonts/
+      - name: 获取最后一期的编号
+        shell: python
+        run: |
+          from os import walk, environ
+          from re import match as re_match
+          latest = 0
+          for dir in next(walk('.'))[1]:
+              m = re_match('第(\d+)期', dir)
+              if m is not None:
+                  number = int(m.group(1))
+                  if number > latest:
+                      latest = number
+          with open(environ['GITHUB_ENV'], 'w', encoding='utf8') as f:
+              print(f'LATEST={latest}', file=f)
+      - name: 创建文件夹
+        run: mkdir pdfs
+      - name: 编译 LaTeX
+        uses: NKID00/latex-action@feat-multitask
+        with:
+          extra_fonts: ./fonts/*
+          root_file: ${{ format('./第{0}期/预印本/*/*.tex', env.LATEST) }}
+          glob_root_file: true
+          latexmk_use_xelatex: true
+          work_in_root_file_dir: true
+          pre_compile: rm -rf /opt/texlive/texdir/texmf-dist/fonts/type1/ && fc-cache -f
+          post_compile: mv ${{ format('./第{0}期/预印本/*/*.pdf', env.LATEST) }} ./pdfs/
+          multitask: true
+      - name: 生成页码和目录
+        shell: python
+        run: |
+          from os import environ, popen
+          from json import load
+          from pathlib import Path
+          latest = environ['LATEST']
+          root = Path(f'./第{latest}期/杂项/')
+          texs_root = Path(f'./第{latest}期/预印本/')
+          pdfs_root = Path('./pdfs/')
+          with open(root / '目录.json', 'r', encoding='utf8') as f:
+              contents = load(f)
+          current_page = 3
+          for type_ in ('论文', '通讯'):
+              # 获取页码
+              articles = [(
+                  name, author,
+                  int(next(filter(
+                      lambda s: s.startswith('NumberOfPages:'),
+                      popen(f'pdftk {pdfs_root / (name + ".pdf")} dump_data_utf8').read().splitlines(keepends=False)
+                  )).split(' ')[1])
+              ) for name, author in contents[type_]]
+              # 生成页码
+              for name, author, page in articles:
+                  with open(texs_root / name / '页码.inc', 'w', encoding='utf8') as f:
+                      print(f'\\setcounter{{page}}{{{current_page}}}', file=f)
+                  current_page += page
+              # 生成目录
+              with open(root / f'{type_}.inc', 'w', encoding='utf8') as f:
+                  print('\\foreach \\fileName\\authorName\\pageNumber in {', file=f)
+                  print(*(f'{{{name}}}/{{{author}}}/{page}' for name, author, page in articles), sep=',\n', file=f)
+                  print('}{\\addContent}', file=f)
+      - name: 用生成的页码和目录重新编译 LaTeX
+        uses: NKID00/latex-action@feat-multitask
+        with:
+          extra_fonts: ./fonts/*
+          root_file: |
+            ${{ format('./第{0}期/杂项/封面.tex', env.LATEST) }}
+            ${{ format('./第{0}期/预印本/*/*.tex', env.LATEST) }}
+          glob_root_file: true
+          latexmk_use_xelatex: true
+          work_in_root_file_dir: true
+          pre_compile: rm -rf /opt/texlive/texdir/texmf-dist/fonts/type1/ && fc-cache -f
+          post_compile: mv ${{ format('./第{0}期/预印本/*/*.pdf', env.LATEST) }} ./pdfs/ && mv ${{ format('./第{0}期/杂项/封面.pdf', env.LATEST) }} ./pdfs/
+          multitask: true
+      - name: 整合 pdf 文件
+        shell: python
+        run: |
+          from os import environ, system
+          from json import load
+          from pathlib import Path
+          latest = environ['LATEST']
+          root = Path(f'./第{latest}期/杂项/')
+          pdfs_root = Path('./pdfs/')
+          with open(root / '目录.json', 'r', encoding='utf8') as f:
+              contents = load(f)
+          articles = map(str, sum(([pdfs_root / f'{name}.pdf' for name, author in contents[type_]] for type_ in ('论文', '通讯')), start=[]))
+          cover = pdfs_root / '封面.pdf'
+          system(f'pdftk {cover} {" ".join(articles)} cat output ./pdfs/第{latest}期.pdf')
+      - uses: actions/upload-artifact@v2.3.1
+        with:
+          name: pdfs
+          path: ./pdfs/*.pdf
+      - name: 重命名 pdf 文件并生成 release 信息
+        run: |
+          cd pdfs
+          readarray -t pdf_files < <(ls -1)
+          cat << EOF > release_body
+          ## 非最终版本，仅用于预览。
+          由于 GitHub 上传 release 资源时不支持包含特殊字符和 Unicode 的文件名，文件已被重命名。单击文件名将自动跳转到对应的文件：
+          EOF
+          for (( i=0; i<${#pdf_files[*]}; ++i )); do
+            mv "${pdf_files[$i]}" "${i}-build-${RUN_NUMBER}.pdf"
+            echo "- [${pdf_files[$i]}](https://github.com/ARS-MC/RRDC/releases/download/build-${RUN_NUMBER}/${i}-build-${RUN_NUMBER}.pdf)" >> release_body
+          done
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+      - uses: anothrNick/github-tag-action@1.36.0
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: ${{ format('build-{0}', github.run_number) }}
+      - uses: softprops/action-gh-release@v0.1.14
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        with:
+          prerelease: true
+          tag_name: ${{ format('build-{0}', github.run_number) }}
+          name: ${{ format('第 {0} 期预印本 build.{1}', env.LATEST, github.run_number) }}
+          body_path: ${{ github.workspace }}/pdfs/release_body
+          files: ./pdfs/*.pdf
+      - uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 3
+          delete_tags: true
+          delete_tag_pattern: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

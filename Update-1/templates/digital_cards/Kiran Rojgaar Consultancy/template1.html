@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Visiting Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #a0c4ff, #bde0fe, #ffafcc);
+        }
+
+        .card {
+            background: #fff;
+            width: 350px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card img {
+            width: 125px;
+            height: 100px;
+            border-radius: 0%;
+            object-fit: cover;
+            margin-bottom: 0px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container a {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center align text */
+            text-decoration: none;
+            font-size: 16px;
+            color: #333;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+        }
+
+        .button-container a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .button-container a span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .button-container a span.icon {
+            margin-right: 10px;
+        }
+
+        .button-container a span.icon img {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="images/logo.png" alt="Company Logo">
+        <h2>Kiran Rojgaar Consultancy</h2>
+        <p>Contact: 9825233012</p>
+        <p>About: We provide job consultancy services to help you find the best job opportunities.</p>
+        <p>Location: Ahmedabad, Gujarat</p>
+        
+        <div class="button-container">
+            <a href="services.html">
+                <span class="icon"><img src="https://example.com/services-icon.png" alt="Services Icon"></span>
+                <span>Our Services</span>
+            </a>
+            <a href="https://wa.me/9825233012">
+                <span class="icon"><img src="https://example.com/whatsapp-icon.png" alt="WhatsApp Icon"></span>
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://www.instagram.com/kiranrojgaarconsultancy">
+                <span class="icon"><img src="https://example.com/instagram-icon.png" alt="Instagram Icon"></span>
+                <span>Instagram</span>
+            </a>
+            <a href="https://www.facebook.com/kiranrojgaarconsultancy">
+                <span class="icon"><img src="https://example.com/facebook-icon.png" alt="Facebook Icon"></span>
+                <span>Facebook</span>
+            </a>
+        </div>
+        <div class="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58956.92664925561!2d72.9035343431267!3d22.54886715396344!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e4e7efd0c8885%3A0xa9a0b93c0c4b5215!2sAnand%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1737984275960!5m2!1sen!2sin" width="300" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</body>
+</html>

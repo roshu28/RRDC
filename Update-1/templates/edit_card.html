@@ -1,0 +1,35 @@
+<!-- Edit Digital Visiting Card Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <title>Edit Your Digital Visiting Card</title>
+</head>
+<body>
+    <header>
+        <h1>Edit Your Digital Visiting Card</h1>
+    </header>
+    <main>
+        <form id="editCardForm" method="POST" action="{% url 'edit_card' card.id %}">
+            {% csrf_token %}
+            <input type="text" name="logo_url" placeholder="Company Logo URL" value="{{ card.logo_url }}" required>
+            <input type="text" name="name" placeholder="Name" value="{{ card.name }}" required>
+            <input type="text" name="contact" placeholder="Contact" value="{{ card.contact }}" required>
+            <input type="text" name="services" placeholder="Services" value="{{ card.services }}" required>
+            <input type="text" name="about" placeholder="About" value="{{ card.about }}" required>
+            <input type="text" name="location" placeholder="Location" value="{{ card.location }}" required>
+            <input type="text" name="whatsapp_url" placeholder="WhatsApp URL" value="{{ card.whatsapp_url }}" required>
+            <input type="text" name="instagram_url" placeholder="Instagram URL" value="{{ card.instagram_url }}" required>
+            <input type="text" name="facebook_url" placeholder="Facebook URL" value="{{ card.facebook_url }}" required>
+            <input type="text" name="linkedin_url" placeholder="LinkedIn URL" value="{{ card.linkedin_url }}" required>
+            <input type="text" name="custom_url" placeholder="Custom URL" value="{{ card.custom_url }}" required>
+            <button type="submit">Update Card</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 RR Digital Card Services</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!-- Create Digital Visiting Card Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <title>Create Your Digital Visiting Card</title>
+</head>
+<body>
+    <header>
+        <h1>Create Your Digital Visiting Card</h1>
+    </header>
+    <main>
+        <form id="createCardForm" method="POST" action="{% url 'create_card' %}">
+            {% csrf_token %}
+            <input type="text" name="logo_url" placeholder="Company Logo URL" required>
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="contact" placeholder="Contact" required>
+            <input type="text" name="services" placeholder="Services" required>
+            <input type="text" name="about" placeholder="About" required>
+            <input type="text" name="location" placeholder="Location" required>
+            <input type="text" name="whatsapp_url" placeholder="WhatsApp URL" required>
+            <input type="text" name="instagram_url" placeholder="Instagram URL" required>
+            <input type="text" name="facebook_url" placeholder="Facebook URL" required>
+            <input type="text" name="linkedin_url" placeholder="LinkedIn URL" required>
+            <input type="text" name="custom_url" placeholder="Custom URL" required>
+            <button type="submit">Create Card</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 RR Digital Card Services</p>
+    </footer>
+</body>
+</html>

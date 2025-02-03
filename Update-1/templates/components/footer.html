@@ -1,0 +1,22 @@
+<div class="card">
+    <img src="{{ card.logo_url }}" alt="Company Logo" class="logo">
+    <h2>Name: {{ card.name }}</h2>
+    <p>Contact: {{ card.contact }}</p>
+    <p>Services: {{ card.services }}</p>
+    <p>About: {{ card.about }}</p>
+    <p>Location: {{ card.location }}</p>
+    <div class="social-media">
+        <a href="{{ card.whatsapp_url }}">WhatsApp</a>
+        <a href="{{ card.instagram_url }}">Instagram</a>
+        <a href="{{ card.facebook_url }}">Facebook</a>
+        <a href="{{ card.linkedin_url }}">LinkedIn</a>
+        <a href="{{ card.custom_url }}">Custom URL</a>
+    </div>
+    <div class="map">
+        <iframe src="{{ card.map_url }}" width="300" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2023 RR Digital Cards. All rights reserved.</p>
+</footer>

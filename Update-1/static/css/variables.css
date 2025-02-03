@@ -1,0 +1,6 @@
+/* CSS variables for themes */
+:root {
+    --primary-color: #35424a;
+    --secondary-color: #e8491d;
+    --font-family: 'Arial', sans-serif;
+}

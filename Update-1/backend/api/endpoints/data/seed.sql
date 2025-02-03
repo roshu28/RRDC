@@ -1,0 +1,2 @@
+INSERT INTO cards (name, contact, services, about, location, logo_url, whatsapp_url, instagram_url, facebook_url, linkedin_url, custom_url, map_url) VALUES
+('John Doe', '1234567890', 'Web Development', 'About John Doe', '123 Main St', 'http://example.com/logo.png', 'http://example.com/whatsapp', 'http://example.com/instagram', 'http://example.com/facebook', 'http://example.com/linkedin', 'http://example.com/custom', 'http://example.com/map');

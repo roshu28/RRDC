@@ -5,11 +5,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom, #a0c4ff, #ffafcc);
+    background: #fff
 }
 
 .card {
-    background: #fff ;
+    background: #f2ff00;
     width: 350px;
     border-radius: 16px;
     border: 5px solid #ddd;

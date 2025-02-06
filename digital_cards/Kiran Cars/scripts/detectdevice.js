@@ -12,7 +12,7 @@ function detectDevice() {
 function handleAddToContacts() {
     var device = detectDevice();
     if (device === "iOS") {
-        window.location.href = "kiran_rojgaar_contact.vcf";
+        window.location.href = "Kiran_Cars.vcf";
     } else if (device === "Android") {
         showContactPopup();
     } else {
@@ -69,6 +69,18 @@ function showContactPopup() {
     };
     buttonContainer.appendChild(button2);
 
+    var button3 = document.createElement('button');
+    button3.textContent = '7265944446';
+    button3.style.padding = '10px 20px';
+    button3.style.backgroundColor = '#007bff';
+    button3.style.color = '#fff';
+    button3.style.border = 'none';
+    button3.style.borderRadius = '5px';
+    button3.style.cursor = 'pointer';
+    button3.onclick = function() {
+        window.location.href = 'tel:7265944446';
+    };
+    buttonContainer.appendChild(button4);
     var closeButton = document.createElement('button');
     closeButton.textContent = 'Close';
     closeButton.style.padding = '10px 20px';
@@ -87,13 +99,15 @@ function showContactPopup() {
 
 function showVCFData() {
     var vcfData = `
-    Kiran Rojgaar Consultancy
+    Kiran Cars
 
     VOICE : 9825233012
 
     VOICE : 9173811113
 
-    ADDRESS : Anand, Gujarat
+    VOICE : 7265944446
+
+    ADDRESS : 444/A GLASS COAT ROAD, VIDHYANAGAR G.I.D.C, VITHAL UDYOGNAGAR, Anand, Gujarat.
 
     EMAIL : anil52789@gmail.com
     `;

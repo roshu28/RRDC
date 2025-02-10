@@ -18,16 +18,16 @@
         <br>
         <h1 style="color: #ff007b;">Haldi, Birthday Party, Groom & Bride Entry, Varghoda, Pre-Wedding, Vastu-Pujan, Mundan, Street Drive</h1>
         <br>
-        <iframe src="videos/001.mp4" width="150px" height="250px" muted></iframe>
-        <iframe src="videos/002.mp4" width="150px" height="250px" muted></iframe>
-        <iframe src="videos/003.mp4" width="150px" height="250px" muted></iframe>
-        <iframe src="videos/004.mp4" width="150px" height="250px" muted></iframe>
+        <iframe src="videos/001.mp4" width="150px" height="250px" id=iframeId></iframe>
+        <iframe src="videos/002.mp4" width="150px" height="250px" id=iframeId></iframe>
+        <iframe src="videos/003.mp4" width="150px" height="250px" id=iframeId></iframe>
+        <iframe src="videos/006.mp4" width="150px" height="250px" id=iframeId></iframe>
         <br>
         <br>
         <h1 style="color: #000080;">MAKE SPECIAL OCCASIONS MORE MEMORABLE WITH ECO FRIENDLY VINTAGE TYPE CAR.</h1>
         <br>
         <br>
-        <img style="width: 150px; height: 200px;" src="images/001.jpg">
+        <img style="width: 150px; height: 200px;" src="images/010.jpg">
         <img style="width: 150px; height: 200px;" src="images/005.jpg">
         <br>
         <img style="width: 150px; height: 200px;" src="images/003.jpg">
@@ -73,9 +73,6 @@
                 <br>
                 <label class="bold-text" for="phone">Phone:</label>
                 <input type="text" id="phone" name="phone" required>
-                <br>
-                <br>
-                <br>
                 <label class="bold-text" for="message">Message:</label>
                 <textarea id="message" name="message" rows="4" required></textarea>
                 <br>
@@ -89,14 +86,17 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
-            const services = document.getElementById('services').value;
             const message = document.getElementById('message').value;
 
-            const whatsappMessage = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nBusiness: ${services}\nMessage: ${message}`;
+            const whatsappMessage = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`;
             const whatsappUrl = `https://wa.me/9825233012?text=${encodeURIComponent(whatsappMessage)}`;
 
             window.open(whatsappUrl, '_blank');
         }
     </script>
+    <script type="text/javascript">
+    myVid=document.getElementById("iframeId");
+    myVid.muted=true;
+</script>
 </body>
 </html>
